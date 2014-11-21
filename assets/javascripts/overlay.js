@@ -1,13 +1,12 @@
 $(function(){
 
     var clicks = 0;
-   $('.subject_link').click(function(e){
+    $('td.subject').find('a').click(function(e){
 
        clicks = clicks + 1;
        if (clicks == 1)
        {
            e.preventDefault();
-           alert('overlay should appear');
            id = $(this).attr('href').replace( /\/issues\//, '' );
            $.ajax({
                url: "/render_form.js",
