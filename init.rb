@@ -46,7 +46,7 @@ Redmine::Plugin.register :redmine_overlay_issues_manager do
         @time_entry = TimeEntry.new(:issue => @issue, :project => @issue.project)
         @relation = IssueRelation.new
         respond_to do |format|
-          format.js {render 'issues/render_form'}
+          format.js {render 'issues/render_show'}
           format.html
         end
       end

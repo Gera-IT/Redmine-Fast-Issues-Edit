@@ -10,7 +10,7 @@ $(function(){
            id = $(this).attr('href').replace( /\/issues\//, '' );
            $.ajax({
                url: "/render_form.js",
-               data: {id: id, controller: 'issues', action: 'render_form'},
+               data: {id: id},
                dataType: 'script',
                error: function(XMLHttpRequest, textStatus, errorThrown) {
                    alert("Status: " + textStatus); alert("Error: " + errorThrown)}
