@@ -11,31 +11,38 @@ Redmine::Plugin.register :redmine_overlay_issues_manager do
   author_url 'http://example.com/about'
 
 
-  permission :allow_overlay, :issues => :render_form
+
+  project_module :overlay do
+    permission :allow_edit_overlay, :issues => :render_form
+    permission :allow_new_overlay, :issues => :render_new_form
+  end
 
   module IssuesControllerPatch
     def self.included(base)
 
       base.class_eval do
-
+        before_filter :find_project_js, :build_new_issue_from_params, :only => :render_new_form
+        before_filter :authorize, :only => :render_new_form
         skip_before_filter :authorize, :only => :render_form
-
         unloadable
       end
       base.send(:include, InstanceMethods)
     end
 
     module InstanceMethods
-
-
-
-      def get_params
-
-        @issue = Issue.find(params[:id])
-        @project = @issue.project
+      def find_project_js
+        @project ||= Project.find(params[:project_id])
       end
 
-
+      def render_new_form
+        @edit_allowed = User.current.allowed_to?(:edit_issues, @project)
+        @priorities = IssuePriority.active
+        @relation = IssueRelation.new
+        respond_to do |format|
+          format.js
+          format.html
+        end
+      end
 
       def render_form
         @issue = Issue.find(params[:id])
@@ -51,7 +58,6 @@ Redmine::Plugin.register :redmine_overlay_issues_manager do
         end
       end
     end
-
   end
 
   ActionDispatch::Callbacks.to_prepare do
@@ -59,10 +65,6 @@ Redmine::Plugin.register :redmine_overlay_issues_manager do
   end
 
 end
-
-
-
-
 
 class AssetsHook < Redmine::Hook::ViewListener
   def view_layouts_base_html_head(context = { })

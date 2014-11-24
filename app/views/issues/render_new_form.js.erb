@@ -2,14 +2,13 @@ $.modal.close();
 $('.edit-form-overlay').remove();
 $('#simplemodal-container').remove();
 $('#simplemodal-overlay').remove();
-$('.edit-form-overlay').remove();
 $('body').append(" <%= j(javascript_include_tag('jstoolbar/jstoolbar-textile.min') +
               javascript_include_tag("jstoolbar/lang/jstoolbar-#{current_language.to_s.downcase}") +
               stylesheet_link_tag('jstoolbar'))%>");
 $('body').append("<%= j (call_hook :view_layouts_base_html_head)%>");
 
 $('body').append("<div class= 'edit-form-overlay' style='display:none'></div>");
-$('.edit-form-overlay').html("<%= j (render template: 'issues/show') %>");
+$('.edit-form-overlay').html("<%= j (render template: 'issues/new') %>");
 $('body').append("<%= j (yield :header_tags) %>");
 $('.edit-form-overlay').modal();
 
