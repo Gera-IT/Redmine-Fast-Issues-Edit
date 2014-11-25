@@ -21,7 +21,7 @@ Redmine::Plugin.register :redmine_overlay_issues_manager do
     def self.included(base)
 
       base.class_eval do
-        before_filter :find_project_js, :build_new_issue_from_params, :only => :render_new_form
+        before_filter :find_project_js, :build_new_issue_from_params_for_overlay, :only => :render_new_form
         before_filter :authorize, :only => :render_new_form
         skip_before_filter :authorize, :only => :render_form
         unloadable
@@ -33,6 +33,45 @@ Redmine::Plugin.register :redmine_overlay_issues_manager do
       def find_project_js
         @project ||= Project.find(params[:project_id])
       end
+
+      def build_new_issue_from_params_for_overlay
+        if params[:id].blank?
+          @issue = Issue.new
+          if params[:copy_from]
+            begin
+              @copy_from = Issue.visible.find(params[:copy_from])
+              @copy_attachments = params[:copy_attachments].present? || request.get?
+              @copy_subtasks = params[:copy_subtasks].present? || request.get?
+              @issue.copy_from(@copy_from, :attachments => @copy_attachments, :subtasks => @copy_subtasks)
+            rescue ActiveRecord::RecordNotFound
+              render_404
+              return
+            end
+          end
+          @issue.project = @project
+        else
+          @issue = @project.issues.visible.find(params[:id])
+        end
+
+        @issue.project = @project
+        @issue.author ||= User.current
+        # Tracker must be set before custom field values
+        @issue.tracker ||= @project.trackers.find((params[:issue] && params[:issue][:tracker_id]) || params[:tracker_id] || :first)
+        if @issue.tracker.nil?
+          render_error l(:error_no_tracker_in_project)
+          return false
+        end
+        @issue.start_date ||= Date.today if Setting.default_issue_start_date_to_creation_date?
+        @issue.safe_attributes = params[:issue]
+
+        @priorities = IssuePriority.active
+        @allowed_statuses = @issue.new_statuses_allowed_to(User.current, @issue.new_record?)
+        @available_watchers = @issue.watcher_users
+        if @issue.project.users.count <= 20
+          @available_watchers = (@available_watchers + @issue.project.users.sort).uniq
+        end
+      end
+
 
       def render_new_form
         @edit_allowed = User.current.allowed_to?(:edit_issues, @project)

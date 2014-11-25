@@ -20,7 +20,7 @@ $('.simplemodal-data').find('input[type=submit]').click(function(){
             type: "POST",
             url: $(this).attr('action'), //sumbits it to the given url of the form
             data: valuesToSubmit,
-            dataType: "JSON" // you want a difference between normal and ajax-calls, and json is standard
+            dataType: "HTML" // you want a difference between normal and ajax-calls, and json is standard
         }).success(function(json){
             $.modal.close();
             $('.edit-form-overlay').remove();
