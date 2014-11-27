@@ -15,9 +15,11 @@ if (typeof(datepickerOptions) !== 'undefined')
 console.log("<%= j (yield :header_tags) %>");
 $('body').append("<%= j (yield :header_tags) %>");
 
-$('body').append("<div class= 'edit-form-overlay' style='display:none'></div>");
+$('body').append("<div class= 'edit-form-overlay' id='form_overlay_container' style='display:none'></div>");
 
-$('.edit-form-overlay').html("<%= j (render template: 'issues/new') %>");
+document.getElementById('form_overlay_container').innerHTML = "<%= j (render template: 'issues/new') %>";
+
+
 
 $('.edit-form-overlay').modal();
 
