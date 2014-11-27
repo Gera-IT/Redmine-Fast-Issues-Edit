@@ -7,9 +7,18 @@ $('body').append(" <%= j(javascript_include_tag('jstoolbar/jstoolbar-textile.min
               stylesheet_link_tag('jstoolbar'))%>");
 $('body').append("<%= j (call_hook :view_layouts_base_html_head)%>");
 
-$('body').append("<div class= 'edit-form-overlay' style='display:none'></div>");
-$('.edit-form-overlay').html("<%= j (render template: 'issues/new') %>");
+if (typeof(datepickerOptions) !== 'undefined')
+{
+    $('body').append("<%=include_calendar_headers_tags %>")
+}
+
+console.log("<%= j (yield :header_tags) %>");
 $('body').append("<%= j (yield :header_tags) %>");
+
+$('body').append("<div class= 'edit-form-overlay' style='display:none'></div>");
+
+$('.edit-form-overlay').html("<%= j (render template: 'issues/new') %>");
+
 $('.edit-form-overlay').modal();
 
 

@@ -36,7 +36,7 @@ $(function(){
             id = $('form').first().attr('action').replace( /\/projects\//, '' );
             id = id.replace( /\/search/, '' );
             $.ajax({
-                url: "render_new_form.js",
+                url: "/render_new_form.js",
                 data: {project_id: id},
                 dataType: 'script',
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
