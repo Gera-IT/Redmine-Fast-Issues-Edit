@@ -5,7 +5,7 @@ $('#simplemodal-overlay').remove();
 $('body').append(" <%= j(javascript_include_tag('jstoolbar/jstoolbar-textile.min') +
               javascript_include_tag("jstoolbar/lang/jstoolbar-#{current_language.to_s.downcase}") +
               stylesheet_link_tag('jstoolbar'))%>");
-$('body').append("<%= j (call_hook :view_layouts_base_html_head)%>");
+$('body').append("<%#= j (call_hook :view_layouts_base_html_head)%>");
 
 if (typeof(datepickerOptions) !== 'undefined')
 {
