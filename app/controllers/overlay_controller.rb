@@ -1,5 +1,7 @@
-# class OverlayController < ApplicationController
-#   include ApplicationHelper
+class OverlayController < IssuesController
+  include ApplicationHelper
+
+  respond_to :js, :html, :api
 #
 #   def render_form
 #     @issue = Issue.find(params[:id])
@@ -14,6 +16,21 @@
 #       format.html
 #     end
 #   end
-#
-#
-# end
+
+
+  def create
+    p 'hello'
+    super
+    if @issue.errors
+
+    else
+      respond_with(@issue)
+    end
+
+  rescue AbstractController::DoubleRenderError => msg
+  #   p msg
+    p "yo wsup"
+    respond_with(:code => @issue)
+
+  end
+end

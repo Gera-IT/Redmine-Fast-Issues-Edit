@@ -5,20 +5,18 @@ $('#simplemodal-overlay').remove();
 $('body').append(" <%= j(javascript_include_tag('jstoolbar/jstoolbar-textile.min') +
               javascript_include_tag("jstoolbar/lang/jstoolbar-#{current_language.to_s.downcase}") +
               stylesheet_link_tag('jstoolbar'))%>");
-$('body').append("<%#= j (call_hook :view_layouts_base_html_head)%>");
+
 
 if (typeof(datepickerOptions) !== 'undefined')
 {
     $('body').append("<%=include_calendar_headers_tags %>")
 }
 
-console.log("<%= j (yield :header_tags) %>");
-$('body').append("<%= j (yield :header_tags) %>");
-
+$('body').append("<%= j (call_hook :view_layouts_base_html_head)%>");
 $('body').append("<div class= 'edit-form-overlay' id='form_overlay_container' style='display:none'></div>");
 
 document.getElementById('form_overlay_container').innerHTML = "<%= j (render template: 'issues/new') %>";
-
+$('body').append("<%= j (yield :header_tags) %>"); // this should be loaded after main form loaded, since some plugins have code that relies on present html elements
 
 
 $('.edit-form-overlay').modal();
@@ -28,9 +26,8 @@ $('.simplemodal-data').find('input[type=submit]').click(function(){
     $('form').submit(function() {
         var valuesToSubmit = $(this).serialize();
         $.ajax({
-            type: "POST",
             url: $(this).attr('action'), //sumbits it to the given url of the form
-            data: valuesToSubmit,
+            data: valuesToSubmit ,
             dataType: "HTML" // you want a difference between normal and ajax-calls, and json is standard
         }).success(function(json){
             $.modal.close();

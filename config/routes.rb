@@ -5,6 +5,8 @@
 
   get :render_form, to: 'issues#render_form'
 
+  post :create, to: 'overlay#create'
+
 
 
   get :render_new_form, to: 'issues#render_new_form'
