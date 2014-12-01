@@ -1,30 +1,47 @@
-$.modal.close();
-$('.edit-form-overlay').remove();
-$('#simplemodal-container').remove();
-$('#simplemodal-overlay').remove();
-$('.edit-form-overlay').remove();
-$('body').append(" <%= j(javascript_include_tag('jstoolbar/jstoolbar-textile.min') +
+var errors = '<%= @errors %>';
+var modified_body = false;
+
+if (parseInt(errors) == 0)
+{
+    modified_body = true;
+    $.modal.close();
+    $('.edit-form-overlay').remove();
+    $('#simplemodal-container').remove();
+    $('#simplemodal-overlay').remove();
+    $('.edit-form-overlay').remove();
+
+}
+
+
+if (modified_body == false)
+{
+    $('body').append(" <%= j(javascript_include_tag('jstoolbar/jstoolbar-textile.min') +
               javascript_include_tag("jstoolbar/lang/jstoolbar-#{current_language.to_s.downcase}") +
               stylesheet_link_tag('jstoolbar'))%>");
-$('body').append("<%= j (call_hook :view_layouts_base_html_head)%>");
+    $('body').append("<div class= 'edit-form-overlay' style='display:none'></div>");
+    $('.edit-form-overlay').html("<%= j (render template: 'issues/show') %>");
+    $('body').append("<%= j (yield :header_tags) %>");
+    $('.edit-form-overlay').modal();
+}
 
-$('body').append("<div class= 'edit-form-overlay' style='display:none'></div>");
-$('.edit-form-overlay').html("<%= j (render template: 'issues/show') %>");
-$('body').append("<%= j (yield :header_tags) %>");
-$('.edit-form-overlay').modal();
+if (parseInt(errors) > 0)
+{
+    showAndScrollTo("update", "issue_notes");
+}
+
+
 
 
 $('.simplemodal-data').find('input[type=submit]').click(function(){
+    var project_id = "<%= @project.identifier%>";
     $('form').submit(function() {
         var valuesToSubmit = $(this).serialize();
         $.ajax({
-            type: "POST",
-            url: $(this).attr('action'), //sumbits it to the given url of the form
-            data: valuesToSubmit,
-            dataType: "JSON" // you want a difference between normal and ajax-calls, and json is standard
+            type: "PUT",
+            url: '/update_issue_from_overlay', //sumbits it to the given url of the form
+            data: valuesToSubmit + '&project_id=' + project_id + "&id=" + '<%= @issue.id %>',
+            dataType: "script" // you want a difference between normal and ajax-calls, and json is standard
         }).success(function(json){
-            $.modal.close();
-            $('.edit-form-overlay').remove();
         });
         return false; // prevents normal behaviour
     });

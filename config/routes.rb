@@ -5,7 +5,8 @@
 
   get :render_form, to: 'issues#render_form'
 
-  post :create, to: 'overlay#create'
+  post :create_issue_from_overlay, to: 'overlay#create'
+  put :update_issue_from_overlay, to: 'overlay#update'
 
 
 
