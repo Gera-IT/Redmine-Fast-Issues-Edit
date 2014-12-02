@@ -1,18 +1,15 @@
-
+var modified_body = false;
 
 if ('<%= @errors %>' == '0')
 {
+    var modified_body = true;
     $.modal.close();
     $('.edit-form-overlay').remove();
     $('#simplemodal-container').remove();
     $('#simplemodal-overlay').remove();
 }
 
-var errors = '<%= @errors %>'
-
-$('body').append(" <%= j(javascript_include_tag('jstoolbar/jstoolbar-textile.min') +
-              javascript_include_tag("jstoolbar/lang/jstoolbar-#{current_language.to_s.downcase}") +
-              stylesheet_link_tag('jstoolbar'))%>");
+var errors = '<%= @errors %>';
 
 
 if (typeof(datepickerOptions) !== 'undefined')
@@ -21,15 +18,17 @@ if (typeof(datepickerOptions) !== 'undefined')
 }
 
 
-$('body').append("<div class= 'edit-form-overlay' id='form_overlay_container' style='display:none'></div>");
+if (modified_body == false)
+{
+    $('body').append(" <%= j(javascript_include_tag('jstoolbar/jstoolbar-textile.min') +
+              javascript_include_tag("jstoolbar/lang/jstoolbar-#{current_language.to_s.downcase}") +
+              stylesheet_link_tag('jstoolbar'))%>");
+    $('body').append("<div class= 'edit-form-overlay' id='form_overlay_container' style='display:none'></div>");
+    $('.edit-form-overlay').html("<%= j (render template: 'issues/new') %>");
+    $('body').append("<%= j (yield :header_tags) %>");
+    $('.edit-form-overlay').modal();
+}
 
-
-
-document.getElementById('form_overlay_container').innerHTML = "<%= j (render template: 'issues/new') %>";
-$('body').append("<%= j (yield :header_tags) %>"); // this should be loaded after main form loaded, since some plugins have code that relies on present html elements
-
-
-$('.edit-form-overlay').modal();
 
 
 $('.simplemodal-data').find('input[type=submit]').click(function(){
