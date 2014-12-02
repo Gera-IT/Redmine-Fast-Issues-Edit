@@ -1,10 +1,11 @@
 var modified_body = false;
+$('.edit-form-overlay').remove();
 
 if ('<%= @errors %>' == '0')
 {
     var modified_body = true;
     $.modal.close();
-    $('.edit-form-overlay').remove();
+
     $('#simplemodal-container').remove();
     $('#simplemodal-overlay').remove();
 }

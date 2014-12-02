@@ -1,6 +1,7 @@
 var errors = '<%= @errors %>';
 var modified_body = false;
 
+$('.edit-form-overlay').remove();
 if (parseInt(errors) == 0)
 {
     modified_body = true;
