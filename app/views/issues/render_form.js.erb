@@ -16,6 +16,11 @@ if (parseInt(errors) == 0)
 
 if (modified_body == false)
 {
+    $.modal.close();
+    $('.edit-form-overlay').remove();
+    $('#simplemodal-container').remove();
+    $('#simplemodal-overlay').remove();
+    $('.edit-form-overlay').remove();
     $('body').append(" <%= j(javascript_include_tag('jstoolbar/jstoolbar-textile.min') +
               javascript_include_tag("jstoolbar/lang/jstoolbar-#{current_language.to_s.downcase}") +
               stylesheet_link_tag('jstoolbar'))%>");

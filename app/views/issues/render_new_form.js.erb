@@ -1,16 +1,19 @@
 var modified_body = false;
-$('.edit-form-overlay').remove();
+
+var errors = '<%= @errors %>';
+
+console.log(errors)
 
 if ('<%= @errors %>' == '0')
 {
     var modified_body = true;
     $.modal.close();
-
+    $('.edit-form-overlay').remove();
     $('#simplemodal-container').remove();
     $('#simplemodal-overlay').remove();
 }
 
-var errors = '<%= @errors %>';
+
 
 
 if (typeof(datepickerOptions) !== 'undefined')
@@ -20,7 +23,12 @@ if (typeof(datepickerOptions) !== 'undefined')
 
 
 if (modified_body == false)
+
 {
+    $.modal.close();
+    $('.edit-form-overlay').remove();
+    $('#simplemodal-container').remove();
+    $('#simplemodal-overlay').remove();
     $('body').append(" <%= j(javascript_include_tag('jstoolbar/jstoolbar-textile.min') +
               javascript_include_tag("jstoolbar/lang/jstoolbar-#{current_language.to_s.downcase}") +
               stylesheet_link_tag('jstoolbar'))%>");
