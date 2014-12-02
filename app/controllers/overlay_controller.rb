@@ -1,5 +1,6 @@
 class OverlayController < IssuesController
   include ApplicationHelper
+  include IssuesHelper
 
   respond_to :js, :html, :api
 
@@ -38,9 +39,16 @@ class OverlayController < IssuesController
   end
 
   def create
+
       call_hook(:controller_issues_new_before_save, { :params => params, :issue => @issue })
       @issue.save_attachments(params[:attachments] || (params[:issue] && params[:issue][:uploads]))
       if @issue.save
+        retrieve_query
+        sort_init(@query.sort_criteria.empty? ? [['id', 'desc']] : @query.sort_criteria)
+        sort_update(@query.sortable_columns)
+        @issues = Issue.where(id: @issue.id)
+        p @issues
+        p @query
         @errors = 0
         call_hook(:controller_issues_new_after_save, { :params => params, :issue => @issue})
         respond_to do |format|
@@ -55,7 +63,7 @@ class OverlayController < IssuesController
             end
           }
 
-          format.js {render '/issues/render_new_form'}
+          format.js {render '/issues/add_new_issue'}
           format.api  { render :action => 'show', :status => :created, :location => issue_url(@issue) }
         end
         return

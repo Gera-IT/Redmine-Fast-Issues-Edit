@@ -2,7 +2,9 @@ var modified_body = false;
 
 var errors = '<%= @errors %>';
 
-console.log(errors)
+console.log('<%= @query.try(:issues) %>');
+
+console.log(errors);
 
 if ('<%= @errors %>' == '0')
 {
