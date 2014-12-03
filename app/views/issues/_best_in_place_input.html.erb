@@ -1,0 +1,33 @@
+<td class="<%= column.css_classes%>">
+<% proj = @issue.project %>
+<% issue = @issue %>
+<% if InlineHelper.define_type(column) == :uneditable_field %>
+    <%= column_content(column, issue) %>
+<% elsif InlineHelper.define_type(column) == :select %>
+    <%= best_in_place issue, InlineHelper.replace_attributes_name(column.name), :type => :select, :collection => InlineHelper.get_collection(column.name, proj.id),
+                      :path => issues_inline_path(issue, :project_id => proj.id), :data => {:simple_value => issue.send(column.name).try(:name), :id => issue.id}
+    %>
+<% elsif InlineHelper.define_type(column) == :bool %>
+    <%= best_in_place issue, column.name, :type => :checkbox, :collection => ["No", "Yes"],
+                      :path => issues_inline_path(issue, :project_id => proj.id), :simple_value => issue.send(column.name) ? "Yes" : "No", :need_object_value => false, :data => {:id => issue.id}%>
+<% elsif InlineHelper.define_type(column) == :custom_field %>
+    <% if InlineHelper.find_custom_value_object(issue, column) %>
+        <%= best_in_place (InlineHelper.find_custom_value_object(issue, column)), :value, InlineHelper.generate_bip_params(issue, column, true) %>
+    <% else %>
+        <%= best_in_place CustomValue.new, :value, InlineHelper.generate_bip_params(issue, column, true) %>
+    <% end %>
+<% elsif [:due_date, :start_date].include?(column.name) %>
+    <%= best_in_place issue, column.name.to_sym, :type => :date,
+                      :path => issues_inline_path(issue, :project_id => proj.id), :inner_class => 'date_field', :activator => "#issue_#{issue.id}_#{column.name.to_s}", :data => {:id => issue.id}%>
+    <%= image_tag 'calendar.png', :plugin => 'redmine_edit_issues_inline', :class => 'ui-datepicker-trigger', :id => "issue_#{issue.id}_#{column.name.to_s}" %>
+<% elsif InlineHelper.define_type(column) == :input %>
+    <% if column.name == :subject %>
+        <%= best_in_place issue, column.name.to_sym, :type => :input, :path => issues_inline_path(issue, :project_id => proj.id), :data => {:id => issue.id, :value => issue.send(column.name)},
+                          :activator => "#issue-#{issue.id}-subject", :acts_as => :link, :link_path => issue_path(issue), :inner_class => "subject_input", :classes => "subject_link"%>
+        <%= image_tag 'pencil12.gif', :plugin => 'redmine_edit_issues_inline', :style => 'float:right; display:none;', :id => "issue-#{issue.id}-subject" %>
+    <% else %>
+        <%= best_in_place issue, column.name.to_sym, :type => :input, :path => issues_inline_path(issue, :project_id => proj.id), :data => {:id => issue.id}%>
+    <% end %>
+<% end %>
+
+</td>
