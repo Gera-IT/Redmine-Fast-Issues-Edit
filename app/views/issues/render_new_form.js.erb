@@ -37,7 +37,10 @@ if (modified_body == false)
     $('body').append("<div class= 'edit-form-overlay' id='form_overlay_container' style='display:none'></div>");
     $('.edit-form-overlay').html("<%= j (render template: 'issues/new') %>");
     $('body').append("<%= j (yield :header_tags) %>");
-    $('.edit-form-overlay').modal();
+    $('.edit-form-overlay').modal({containerCss:{
+                height:630
+            }}
+    );
 }
 
 
