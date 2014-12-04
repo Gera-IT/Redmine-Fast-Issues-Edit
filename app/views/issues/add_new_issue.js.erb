@@ -9,6 +9,7 @@ if (window.location.pathname.indexOf('issues') > -1)
         $('.list tbody').prepend('<tr id="issue-<%= @issue.id %>" class="hascontextmenu <%= cycle("odd", "even") %> <%= @issue.css_classes %>">"' +
         '<td class=checkbox hide-when-print><%= check_box_tag("ids[]", @issue.id, false, :id => nil) %></td>' +
         '<%=j render(partial: "issues/best_in_place_input", collection:@query.inline_columns, as: :column).html_safe%>');
+        jQuery(".best_in_place").best_in_place();
     }
 
     else
