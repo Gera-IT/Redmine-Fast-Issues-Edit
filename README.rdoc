@@ -1,3 +1,17 @@
-= redmine_overlay_issues_manager
+# redmine_overlay_issues_manager
 
-Description goes here
+Plugin that adds overlay to issues page subject link, and to 'New Issue" link. In this overlay will be opened according pages.
+
+## How to install
+
+cd redmine/plugins
+
+Run `https://github.com/avdept/redmine_overlay_issues_manager.git`
+
+Run `rake redmine:plugins:assets`
+
+Restart redmine server
+
+Go To permissions page and select who can use this plugin(this can be applied to all users to increase speed of managing issues'
+
+
