@@ -1,6 +1,14 @@
 $(function(){
 
-    $('td.subject').find('a').click(function(e){
+    selector = $('td.subject').find('a');
+
+
+    $('window').on('click', selector, function(e) {
+        //do something
+    });
+
+
+    $('td.subject').find('a').live('click', function(e){
 
            e.preventDefault();
            id = $(this).attr('href').replace( /\/issues\//, '' );

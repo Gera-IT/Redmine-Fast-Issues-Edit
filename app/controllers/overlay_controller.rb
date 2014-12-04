@@ -19,13 +19,17 @@ class OverlayController < IssuesController
     end
 
     if saved
+      retrieve_query
+      sort_init(@query.sort_criteria.empty? ? [['id', 'desc']] : @query.sort_criteria)
+      sort_update(@query.sortable_columns)
+      @issues = Issue.where(id: @issue.id)
       @errors = 0
       render_attachment_warning_if_needed(@issue)
       flash[:notice] = l(:notice_successful_update) unless @issue.current_journal.new_record?
 
       respond_to do |format|
         format.html { redirect_back_or_default issue_path(@issue) }
-        format.js {render :template => '/issues/render_form'}
+        format.js {render :template => '/issues/update_issue'}
         format.api  { render_api_ok }
       end
     else
@@ -47,8 +51,6 @@ class OverlayController < IssuesController
         sort_init(@query.sort_criteria.empty? ? [['id', 'desc']] : @query.sort_criteria)
         sort_update(@query.sortable_columns)
         @issues = Issue.where(id: @issue.id)
-        p @issues
-        p @query
         @errors = 0
         call_hook(:controller_issues_new_after_save, { :params => params, :issue => @issue})
         respond_to do |format|

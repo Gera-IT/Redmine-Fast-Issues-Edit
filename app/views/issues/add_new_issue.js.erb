@@ -2,20 +2,23 @@ $.modal.close();
 $('.edit-form-overlay').remove();
 $('#simplemodal-container').remove();
 $('#simplemodal-overlay').remove();
-console.log('<%= Redmine::Plugin.all.map(&:id).include?(:redmine_edit_issues_inline) %>');
-if ('<%= Redmine::Plugin.all.map(&:id).include?(:redmine_edit_issues_inline) %>' == 'true')
+if (window.location.pathname.indexOf('issues') > -1)
 {
-    $('.list tbody').prepend('<tr id="issue-<%= @issue.id %>" class="hascontextmenu <%= cycle("odd", "even") %> <%= @issue.css_classes %>">"' +
-    '<td class=checkbox hide-when-print><%= check_box_tag("ids[]", @issue.id, false, :id => nil) %></td>' +
-    '<%=j render(partial: "issues/best_in_place_input", collection:@query.inline_columns, as: :column).html_safe%>');
+    if ('<%= Redmine::Plugin.all.map(&:id).include?(:redmine_edit_issues_inline) %>' == 'true')
+    {
+        $('.list tbody').prepend('<tr id="issue-<%= @issue.id %>" class="hascontextmenu <%= cycle("odd", "even") %> <%= @issue.css_classes %>">"' +
+        '<td class=checkbox hide-when-print><%= check_box_tag("ids[]", @issue.id, false, :id => nil) %></td>' +
+        '<%=j render(partial: "issues/best_in_place_input", collection:@query.inline_columns, as: :column).html_safe%>');
+    }
+
+    else
+    {
+        $('.list tbody').prepend('<tr id="issue-<%= @issue.id %>" class="hascontextmenu <%= cycle("odd", "even") %> <%= @issue.css_classes %>">"' +
+        '<td class=checkbox hide-when-print><%= check_box_tag("ids[]", @issue.id, false, :id => nil) %></td>' +
+        '<%= raw @query.inline_columns.map {|column| "<td class=\"#{column.css_classes}\">#{column_content(column, @issue)}</td>"}.join %>');
+    }
 }
 
-else
-{
-    $('.list tbody').prepend('<tr id="issue-<%= @issue.id %>" class="hascontextmenu <%= cycle("odd", "even") %> <%= @issue.css_classes %>">"' +
-    '<td class=checkbox hide-when-print><%= check_box_tag("ids[]", @issue.id, false, :id => nil) %></td>' +
-            '<%= raw @query.inline_columns.map {|column| "<td class=\"#{column.css_classes}\">#{column_content(column, @issue)}</td>"}.join %>');
-}
 
 
 
