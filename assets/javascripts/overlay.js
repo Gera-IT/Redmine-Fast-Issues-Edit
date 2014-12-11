@@ -25,7 +25,9 @@ $(function(){
             data: {project_id: id},
             dataType: 'script',
             error: function(XMLHttpRequest, textStatus, errorThrown) {
-                window.location = $(this).attr('href');
+                console.log(textStatus);
+                console.log(errorThrown);
+                //window.location = $(this).attr('href');
             }
         })
 

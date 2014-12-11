@@ -21,6 +21,7 @@ if (modified_body == false)
     $('#simplemodal-container').remove();
     $('#simplemodal-overlay').remove();
     $('.edit-form-overlay').remove();
+    $('html').attr('style', 'overflow:hidden; height:100%;');
     $('body').append(" <%= j(javascript_include_tag('jstoolbar/jstoolbar-textile.min') +
               javascript_include_tag("jstoolbar/lang/jstoolbar-#{current_language.to_s.downcase}") +
               stylesheet_link_tag('jstoolbar'))%>");
@@ -28,9 +29,14 @@ if (modified_body == false)
     $('.edit-form-overlay').html("<%= j (render template: 'issues/show') %>");
     $('body').append("<%= j (yield :header_tags) %>");
     $('.edit-form-overlay').modal({containerCss:{
-            height:630
-            }}
-);
+                height:630
+            },
+                onClose: function (dialog) {
+                    $('html').attr('style', '');
+                    $.modal.close();
+                }
+            }
+    );
 }
 
 if (parseInt(errors) > 0)

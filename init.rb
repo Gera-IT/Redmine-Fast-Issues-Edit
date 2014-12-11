@@ -1,6 +1,6 @@
 require 'assets_hook'
 require 'redmine'
-# require 'redmine_overlay_issues_manager/issues_controller_patch'
+
 
 Redmine::Plugin.register :redmine_overlay_issues_manager do
   name 'Redmine Overlay Issues Manager plugin'
@@ -91,6 +91,16 @@ Redmine::Plugin.register :redmine_overlay_issues_manager do
         @priorities = IssuePriority.active
         @time_entry = TimeEntry.new(:issue => @issue, :project => @issue.project)
         @relation = IssueRelation.new
+        @journals = @issue.journals.includes(:user, :details).reorder("#{Journal.table_name}.id ASC").all
+        @journals.each_with_index {|j,i| j.indice = i+1}
+        @journals.reject!(&:private_notes?) unless User.current.allowed_to?(:view_private_notes, @issue.project)
+        Journal.preload_journals_details_custom_fields(@journals)
+        # TODO: use #select! when ruby1.8 support is dropped
+        @journals.reject! {|journal| !journal.notes? && journal.visible_details.empty?}
+        @journals.reverse! if User.current.wants_comments_in_reverse_order?
+
+        @changesets = @issue.changesets.visible.all
+        @changesets.reverse! if User.current.wants_comments_in_reverse_order?
         respond_to do |format|
           format.js
           format.html
