@@ -4,9 +4,9 @@ Plugin that adds overlay to issues page subject link, and to 'New Issue" link. I
 
 ## How to install
 
-cd redmine/plugins
+Exec `cd redmine/plugins`
 
-Run `https://github.com/avdept/redmine_overlay_issues_manager.git`
+Run `git clone https://github.com/avdept/redmine_overlay_issues_manager.git`
 
 Run `rake redmine:plugins:assets`
 
