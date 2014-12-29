@@ -12,7 +12,7 @@ Redmine::Plugin.register :redmine_overlay_issues_manager do
 
 
 
-  project_module :overlay do
+  project_module :open_issues_in_overlay do
     permission :allow_edit_overlay, :issues => :render_form
     permission :allow_new_overlay, :issues => :render_new_form
   end
@@ -21,9 +21,9 @@ Redmine::Plugin.register :redmine_overlay_issues_manager do
     def self.included(base)
 
       base.class_eval do
-        before_filter :find_project_js, :build_new_issue_from_params_for_overlay, :only => :render_new_form
-        before_filter :authorize, :only => :render_new_form
-        skip_before_filter :authorize, :only => :render_form
+        before_filter :find_project_js, :build_new_issue_from_params_for_overlay, :only => [:render_new_form, :render_form]
+        before_filter :authorize, :only => [:render_new_form, :render_form]
+        # skip_before_filter :authorize, :only => :render_form
         unloadable
       end
       base.send(:include, InstanceMethods)

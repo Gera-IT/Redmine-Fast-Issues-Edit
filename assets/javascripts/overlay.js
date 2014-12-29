@@ -1,16 +1,19 @@
 $(function(){
     $('td.subject').find('a').live('click', function(e){
-       e.preventDefault();
-
-       id = $(this).attr('href').replace( /\/issues\//, '' );
-       $.ajax({
+         e.preventDefault();
+         console.log(e);
+         _this = $(this);
+         project_id = $('form').first().attr('action').replace( /\/projects\//, '' );
+         project_id = project_id.replace( /\/search/, '' );
+         id = $(this).attr('href').replace( /\/issues\//, '' );
+         $.ajax({
            url: "/render_form.js",
-           data: {id: id},
+           data: {id: id, project_id: project_id},
            dataType: 'script',
            error: function(XMLHttpRequest, textStatus, errorThrown) {
-               window.location = $(this).attr('href');
+               window.location = _this.attr('href');
                }
-       })
+         })
    });
 });
 
@@ -27,7 +30,7 @@ $(function(){
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                 console.log(textStatus);
                 console.log(errorThrown);
-                //window.location = $(this).attr('href');
+                window.location = $('a.new-issue').attr('href');
             }
         })
 
