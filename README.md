@@ -5,6 +5,7 @@ This Plugin adds overlay to issues page, so issues can be opened in modal window
 
 ## Not implemented yet:
 Add new items to issues list
+
 Change data after issue update
 
 ## How to install
