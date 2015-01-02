@@ -12,7 +12,7 @@ Change data after issue update
 
 Exec `cd redmine/plugins`
 
-Run `git clone https://github.com/avdept/redmine_overlay_issues_manager.git` `redmine_overlay_issues_manager`
+Run `git clone https://github.com/Gera-IT/Redmine-Fast-Issues-Edit.git` `redmine_overlay_issues_manager`
 
 Run `rake redmine:plugins:assets`
 
